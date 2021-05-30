@@ -1,6 +1,16 @@
 <template>
   <div class="calendar-indicator">
-    <Stats v-if="itemsYear && indicators" :items="itemsYear"></Stats>
+    <Stats v-if="itemsYear && indicators" :items="itemsYear" :summaryLabel="`Всего (${currentYear})`"></Stats>
+    <Calendar 
+      language="ru"
+      :dataSource="dataSource"
+      :min-date="minDate"
+      :max-date="maxDate"
+      :custom-data-source-renderer="renderDay"
+      render-style="custom"
+      @year-changed="yearChanged"
+      :year="new Date().getFullYear() - 1"
+    ></Calendar>
     <Calendar 
       language="ru"
       :dataSource="dataSource"
@@ -51,7 +61,7 @@ export default {
       for(let item of this.dataSource) {
         if (item.startDate < minDate) minDate = item.startDate
       }
-      return minDate
+      return new Date(minDate)
     },
 
     maxDate() {
@@ -59,7 +69,7 @@ export default {
       for(let item of this.dataSource) {
         if (item.endDate > maxDate) maxDate = item.endDate
       }
-      return maxDate
+      return new Date(maxDate)
     },
   },
 
@@ -90,7 +100,7 @@ export default {
       } */
 
       const indicatorsCount = Object.keys(this.indicators).length
-      const isSummary = indicatorsCount > 3
+      const isSummary = indicatorsCount > 2
       let summaryValue = 0
 
       for (let ind in this.indicators) {

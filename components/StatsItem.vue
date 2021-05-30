@@ -1,10 +1,13 @@
 <template>
   <div :class="['stats-item', 'stats-item_' + validType]">
-    <span v-if="color" class="indicator-color" :style="'background-color: '+ color"></span>
+    <span v-if="color" class="stats-item-color" :style="'background-color: '+ color"></span>
     <span v-if="indicator" class="indicator-label">{{ indicator }}:</span>
     <span :class="['indicator-value', 'indicator_valid_' + validType]" :style="'color: ' + validColor">
       <span v-if="isSummary">{{ percent }}%</span>
-      <span v-else>{{ indicatorStats.total }} / {{ totalDays }} ({{ percent }}%)</span>
+      <span v-else>
+        {{ percent }}%&nbsp;&nbsp;&nbsp;
+        <span class="stats-item-counters">{{ indicatorStats.total }} / {{ totalDays }}</span>
+      </span>
     </span>
   </div>
 </template>
@@ -48,7 +51,7 @@ export default {
 </script>
 
 <style>
-.indicator-color {
+.stats-item-color {
   display: inline-block;
   width: 20px;
   height: 9px;

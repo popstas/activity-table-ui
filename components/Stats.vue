@@ -2,7 +2,7 @@
   <div class="stats">
     <div class="stats-total">
       <StatsItem 
-        :indicator="noLabels ? '' : 'Всего'"
+        :indicator="noLabels ? '' : (summaryLabel || 'Всего')"
         :indicatorStats="{total: stats.totalValue }"
         :totalDays="stats.totalDays * Object.keys(stats.indicators).length"
         :isSummary="true"
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  props: ['items', 'totalDays', 'noLabels'],
+  props: ['items', 'totalDays', 'noLabels', 'summaryLabel'],
 
   data() {
     return {

@@ -22,16 +22,17 @@
     </div> -->
 
     <div class="calendar-block">
-      <h3>Здоровье</h3>
+      <h2>Здоровье</h2>
       <CalendarIndicator :items="items" :indicators="categories['Здоровье']"></CalendarIndicator>
     </div>
 
     <div class="calendar-block">
-      <h3>Продуктивность</h3>
+      <h2>Продуктивность</h2>
       <CalendarIndicator :items="items" :indicators="categories['Продуктивность']"></CalendarIndicator>
     </div>
 
-    <el-row>
+    <h2>Динамика изменения</h2>
+    <el-row class="stats-table">
       <el-col :span="12">
         <h3>7 дней</h3>
         <div v-for="(indicators, name) in categories" :key="name">
@@ -98,23 +99,6 @@ const colors = [
   '#9DC3E6',
   '#E5C300',
 ]
-/* const colors = [
-  '#B50303',
-  '#B24C03',
-  '#AF9303',
-  '#82AD03',
-  '#3BAA03',
-  '#03A811',
-  '#03A554',
-  '#03A395',
-  '#036CA0',
-  '#03299E',
-  // '#1C039B',
-  '#5A0399',
-  '#990399',
-  '#99035A',
-  '#99031C',
-  ]; */
 
 // angular
 colors.push(...['#9CB703', '#F5BB00', '#FF4A32', '#B56CE2', '#45A597']);
@@ -283,6 +267,15 @@ export default {
   columns: 2;
   margin-bottom: 15px;
 }
+@media (max-width: 640px) {
+  .el-checkbox-group {
+    columns: 1;
+  }
+  .stats-table .stats-item-color,
+  .stats-table .stats-item-counters {
+    display: none;
+  }
+}
 .el-checkbox {
   display: block;
 }
@@ -292,7 +285,7 @@ export default {
 }
 
 .calendar-block {
-  text-align: center;
+  /* text-align: center; */
   margin-top: 120px;
 }
 
@@ -300,6 +293,10 @@ export default {
   text-align: left;
 }
 
+h2 {
+  font-size: 30px;
+  margin: 120px 0 15px;
+}
 h3 {
   font-size: 24px;
   line-height: 2em;
