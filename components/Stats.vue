@@ -35,8 +35,8 @@ export default {
       const stats = { indicators: {}, totalValue: 0 }
 
       const fromDate = Math.min(...this.items.map(i => i.startDate));
-      const toDate = Math.max(...this.items.map(i => i.endDate));
-      stats.totalDays = this.totalDays || Math.floor((toDate - fromDate) / 86400 / 1000) + 1;
+      const toDate = Math.max(...this.items.map(i => i.endDate)) + 86300 * 1000;
+      stats.totalDays = this.totalDays || Math.floor((toDate - fromDate) / 86400 / 1000) + 0;
 
       for (let item of this.items) {
         const indicatorStats = stats.indicators[item.indicator];

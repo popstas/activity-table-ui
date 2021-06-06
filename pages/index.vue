@@ -1,5 +1,16 @@
 <template>
   <div class="container">
+
+    <div class="calendar-month-block">
+      <h2>Месяц</h2>
+      <CalendarMonth :items="items" :indicators="['Не курил', 'Зарядка']" :months="1"></CalendarMonth>
+    </div>
+
+    <div class="calendar-month-block">
+      <h2>Квартал</h2>
+      <CalendarMonth :items="items" :indicators="['Не курил', 'Зарядка']" :months="3"></CalendarMonth>
+    </div>
+
     <div class="indicator-select">
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Все</el-checkbox>
       <el-checkbox-group v-model="currentIndicators" @change="handleCheckedIndicatorsChange">
@@ -12,7 +23,17 @@
       </el-checkbox-group>
     </div>
     <div>
-      <CalendarIndicator v-if="currentIndicators && currentIndicators.length > 0" :items="items" :indicators="currentIndicators"></CalendarIndicator>
+      <CalendarIndicator
+        v-if="currentIndicators && currentIndicators.length > 0"
+        :items="items"
+        :indicators="currentIndicators"
+      ></CalendarIndicator>
+      
+      <CalendarMonth
+        v-if="currentIndicators && currentIndicators.length > 0"
+        :items="items"
+        :indicators="currentIndicators" :months="3"
+      ></CalendarMonth>
     </div>
 
 
@@ -79,9 +100,10 @@
 
 <script>
 import CalendarIndicator from '@/components/CalendarIndicator'
+import CalendarMonth from '@/components/CalendarMonth'
 import { createHash } from 'crypto'
 
-let metrics = require('../../activity-table/data/items.json')
+let metrics = require('../data/items.json')
 metrics = metrics.filter(m => !!m.value)
 
 // const colors = ['#2C8FC9', '#9CB703', '#F5BB00', '#FF4A32', '#B56CE2', '#45A597'];
@@ -98,6 +120,9 @@ const colors = [
   '#F1975A',
   '#9DC3E6',
   '#E5C300',
+]
+const colors2 = [
+  'gray', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'indigo', 'purple', 'pink'
 ]
 
 // angular
@@ -122,7 +147,8 @@ const excludedIndicators = [
 
 export default {
   components: {
-    CalendarIndicator
+    CalendarIndicator,
+    CalendarMonth,
   },
 
   data() {
@@ -161,18 +187,10 @@ export default {
 
   computed: {
     indicatorColors() {
-      const indicatorColors = {};
-      for(let indicator of this.indicators) {
-        const hash = createHash('md5').update(indicator).digest('hex')
-        const hashInt = Number(BigInt(`0x${hash.substring(0, 16)}`)) / 1000000
-        const colorInd = Math.floor(hashInt % colors.length);
-        // console.log('hashInt: ', hashInt);
-        // console.log('colorInd: ', colorInd);
-
-        indicatorColors[indicator] = colors[colorInd]
-      }
-      // console.log('indicatorColors: ', indicatorColors);
-      return indicatorColors;
+      return this.buildColorsMap(colors);
+    },
+    indicatorColors2() {
+      return this.buildColorsMap(colors2);
     },
 
     items() {
@@ -185,6 +203,7 @@ export default {
         // const color = '#9cb703';
 
         const color = this.indicatorColors[item.indicator];
+        const color2 = this.indicatorColors2[item.indicator];
 
         return {
           id,
@@ -192,7 +211,8 @@ export default {
           indicator: item.indicator,
           startDate,
           endDate: new Date(endTime),
-          color
+          color,
+          color2,
         }
       })
     },
@@ -221,6 +241,21 @@ export default {
   },
 
   methods: {
+    buildColorsMap(colors) {
+      const indicatorColors = {};
+      for(let indicator of this.indicators) {
+        const hash = createHash('md5').update(indicator).digest('hex')
+        const hashInt = Number(BigInt(`0x${hash.substring(0, 16)}`)) / 1000000
+        const colorInd = Math.floor(hashInt % colors.length);
+        // console.log('hashInt: ', hashInt);
+        // console.log('colorInd: ', colorInd);
+
+        indicatorColors[indicator] = colors2[colorInd]
+      }
+      // console.log('indicatorColors: ', indicatorColors);
+      return indicatorColors;
+    },
+
     handleCheckAllChange(val) {
       this.currentIndicators = val ? this.indicators : [];
       this.isIndeterminate = false;
